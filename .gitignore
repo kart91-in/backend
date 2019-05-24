@@ -1,2 +1,6 @@
 .idea/
 *.sqlite3
+*.pyc
+__pycache__
+snapshop_venv/
+settings_local.py
