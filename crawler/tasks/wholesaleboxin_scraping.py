@@ -40,11 +40,13 @@ def scrape_categories():
             continue
 
 
-def scrape_category_products(category_id, page=5, from_page=1):
+def scrape_category_products(category_id, page=-1, from_page=1):
     from crawler.crawlers.wholesaleboxin_crawler import WholeSaleBoxInProductCrawler
     from crawler.models import Product, Category
     category = Category.objects.get(category_id=category_id)
+    latest_product_id = Product.objects.order_by('-created_at').values('id').first()
     crawler = WholeSaleBoxInProductCrawler(
+        stop_product_id=latest_product_id,
         category_id=category_id,
         page=page,
         from_page=from_page,

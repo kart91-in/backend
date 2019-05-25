@@ -8,6 +8,7 @@ class WholeSaleBoxInProductCrawler(BaseCrawler):
         self.from_page = kwargs.get('from_page') or 1
         self.page = kwargs.get('page') or -1
         self.category_id = kwargs.get('category_id')
+        self.stop_product_id = kwargs.get('stop_product_id')
 
     def start_crawl(self):
         params = {
@@ -49,6 +50,9 @@ class WholeSaleBoxInProductCrawler(BaseCrawler):
                 if not hasattr(self, '_total_products'):
                     self._total_products = data['product_total']
                 for product_data in data['products']:
+                    if self.stop_product_id and self.stop_product_id == product_data.get('product_id'):
+                        print('Reach duplicate product')
+                        break
                     yield product_data
                 self._last_result = data['products']
             else:
