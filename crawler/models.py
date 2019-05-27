@@ -29,6 +29,8 @@ class Product(BaseModel):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     meta = JSONField(default=dict)
 
+    def __str__(self):
+        return self.product_id
 
 class Site(BaseModel):
 
@@ -41,7 +43,7 @@ class Category(BaseModel):
 
     url = models.CharField(max_length=500, null=True, blank=True)
     title = models.CharField(max_length=500, null=True, blank=True)
-    category_id = models.PositiveSmallIntegerField()
+    category_id = models.CharField(max_length=500, null=True, blank=True)
     site = models.ForeignKey('Site', on_delete=models.CASCADE)
     meta = JSONField(default=dict)
 

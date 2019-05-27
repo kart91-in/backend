@@ -1,7 +1,7 @@
 import json
 
 import requests
-
+from bs4 import BeautifulSoup
 
 class BaseCrawler(object):
 
@@ -16,6 +16,9 @@ class BaseCrawler(object):
         if not hasattr(self, '_session'):
             self._session = requests.Session()
         return self._session
+
+    def html(self, text):
+        return BeautifulSoup(text, "html.parser")
 
     def json(self, text):
         return json.loads(text)

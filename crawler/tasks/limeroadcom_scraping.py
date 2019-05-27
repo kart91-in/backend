@@ -1,30 +1,24 @@
-website_url = 'https://wholesalebox.in/'
+website_url = 'https://www.limeroad.com/'
 
 def format_categories(category):
     return {
-        'title': category['link_title'],
-        'url': category['href'],
-        'category_id': int(category['value']),
+        **category,
         'meta': category,
     }
 
 def format_product(product):
     return {
         'product_id': product['product_id'],
-        'title': product['heading_title'],
-        'country_origin': product['pickup_city'],
-        'price': int(product['price_value']),
-        'rating': product['rating'],
-        'url': website_url + product['href'],
+        'price': product['price_sale'],
+        'url': product['url'],
         'meta': product,
     }
 
 def scrape_categories():
-    from crawler.crawlers.wholesaleboxin_crawler import WholeSaleBoxInCategoryCrawler
     from crawler.models import Category, Site
-
+    from crawler.crawlers.limeroadcom_crawler import LimeRoadComCategoryCrawler
     site = Site.objects.get(url=website_url)
-    category_crawler = WholeSaleBoxInCategoryCrawler()
+    category_crawler = LimeRoadComCategoryCrawler()
     categories_data = category_crawler.start_crawl()
 
     for category in categories_data:
@@ -41,12 +35,12 @@ def scrape_categories():
 
 
 def scrape_category_products(category_id, page=-1, from_page=1):
-    from crawler.crawlers.wholesaleboxin_crawler import WholeSaleBoxInProductCrawler
+    from crawler.crawlers.limeroadcom_crawler import LimeRoadComProductCrawler
     from crawler.models import Product, Category
     category = Category.objects.get(category_id=category_id)
     latest_product_id = Product.objects.filter(category=category)\
         .order_by('-created_at').values('id').first()
-    crawler = WholeSaleBoxInProductCrawler(
+    crawler = LimeRoadComProductCrawler(
         stop_product_id=latest_product_id,
         category_id=category_id,
         page=page,
